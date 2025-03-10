@@ -25,7 +25,13 @@ function addTodo(){
 
     document.dispatchEvent(new Event(RENDER_EVENT));
     document.addEventListener(RENDER_EVENT,function(){
-        console.log(todos);
+        const uncompletedTODOList = document.getElementById("todos");
+        uncompletedTODOList.innerHTML = "";    
+        
+        for(const todoItem of todos){
+            const todoElement = makeToDo(todoItem);
+            uncompletedTODOList.append(todoElement);
+        }
     });
 };
 
