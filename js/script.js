@@ -27,25 +27,47 @@ function addTodo(){
     document.addEventListener(RENDER_EVENT,function(){
         const uncompletedTODOList = document.getElementById("todos");
         uncompletedTODOList.innerHTML = "";    
+
+
+        const completedTODOList = document.getElementById("completed-todos")
+        completedTODOList.innerHTML = "";
         
         for(const todoItem of todos){
             const todoElement = makeToDo(todoItem);
             if(!todoItem.isCompleted){
                 uncompletedTODOList.append(todoElement);
+            }else{
+                completedTODOList.append(todoElement);
             }
         }
     });
 };
 
+
+// Finding To Do ID
 function findToDoId(todoId){
     for(const todo of todos){
         if(todo.id === todoId){
-            return todoItem;
+            return todo;
         }
     }
     return null;
 }
 
+// Finding To Do Id Index
+function findToDoIndex(todoId){
+    for(const index of todos){
+        if(index.id === todoId){
+            console.log(todos.indexOf(index));
+            return todos.indexOf(index);
+        }
+    }
+
+    return -1;
+}
+
+
+// Adding Task To Completed
 function addTaskToCompleted(todoId){
     const todoTarget = findToDoId(todoId);
 
@@ -56,6 +78,27 @@ function addTaskToCompleted(todoId){
     
 }
 
+// Removing Task From Completed
+function removeTaskFromCompleted(todoId){
+    const todoTarget = findToDoIndex(todoId);
+
+    if(todoTarget == -1) return;
+
+    todos.slice(todoTarget,1);
+    document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+// Undo Task From Completed
+function undoTaskFromCompleted(todoId){
+    const todoTarget = findToDoId(todoId);
+
+    if(todoTarget == null) return;
+
+    todoTarget.isCompleted = false;
+    document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+// Creating To Do List
 function makeToDo(todoObject){
     const textTitle = document.createElement("h2");
     textTitle.innerText = todoObject.title;
